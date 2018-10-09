@@ -11,5 +11,12 @@
 
     <artifactId>pyg-pojo</artifactId>
 
+    <dependencies>
+        <!-- 配置通用mapper -->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

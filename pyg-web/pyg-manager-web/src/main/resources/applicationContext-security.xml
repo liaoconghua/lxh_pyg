@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--1.导入命名空间-->
+
+    <!--#####配置请求URL拦截规则#####-->
+    <!--
+        pattern: 对应的url
+        security: none 不需要拦截
+    -->
+    <security:http pattern="/login.html" security="none"/>
+    <security:http pattern="/js/**" security="none"/>
+    <security:http pattern="/css/**" security="none"/>
+    <security:http pattern="/img/**" security="none"/>
+    <security:http pattern="/plugins/**" security="none"/>
+
+    <security:http>
+        <!--配置那些请求URL需要什么角色才能访问ROLE_* -->
+        <security:intercept-url pattern="/**" access="hasRole('ADMIN')"/>
+        <!--配置表单登录
+            login-page: 登录页面
+            login-processing-url: 登录处理URL
+            default-target-url: 默认目标URL(登录成功后重定向跳转的页面)
+            always-use-default-target: 总是用默认的目标
+            authentication-failure-url: 登录失败需要重定向的的页面
+        -->
+        <security:form-login login-page="/login.html"
+                             login-processing-url="/login"
+                             default-target-url="/admin/index.html"
+                             always-use-default-target="true"
+                             authentication-failure-url="/login.html"/>
+        <!--关闭CSRF跨站点请求伪造-->
+        <security:csrf disabled="true"/>
+        <!-- 配置头信息，指定框架页策略(iframe子窗口也可以访问)-->
+        <security:headers>
+            <security:frame-options policy="SAMEORIGIN"/>
+        </security:headers>
+        <!-- 配置退出登录 -->
+        <security:logout logout-url="/logout" logout-success-url="/login.html"/>
+    </security:http>
+
+    <!--####### 配置身份认证管理器 #######-->
+    <security:authentication-manager>
+        <!--配置认证提供者-->
+        <security:authentication-provider>
+            <!--配置用户服务-->
+            <security:user-service>
+                <security:user name="admin" password="root" authorities="ROLE_ADMIN"/>
+                <security:user name="test" password="root" authorities="ROLE_ADMIN"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+</beans>
