@@ -13,27 +13,30 @@
     <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
 
 	<script src="/plugins/angularjs/angular.min.js"></script>
-	<script src="/plugins/angularjs/pagination.js"></script>
+
+	<!-- 分页模块开始 -->
 	<link rel="stylesheet" href="/plugins/angularjs/pagination.css"/>
+	<script src="/plugins/angularjs/pagination.js"></script>
+	<!-- 分页模块结束 -->
 
 	<script src="/js/base-pagination.js"></script>
 	<script src="/js/service/baseService.js"></script>
 	<script src="/js/controller/baseController.js"></script>
 	<script src="/js/controller/typeTemplateController.js"></script>
 
-	<!--导入下拉列表-->
+	<!-- select2开始 -->
 	<link rel="stylesheet" href="/plugins/select2/select2.css"/>
 	<link rel="stylesheet" href="/plugins/select2/select2-bootstrap.css"/>
 	<script src="/plugins/select2/select2.min.js"></script>
 	<script src="/plugins/select2/angular-select2.js"></script>
-
+	<!-- select2结束 -->
 
 </head>
 
 <body class="hold-transition skin-red sidebar-mini"
 	  ng-app="pinyougou"
 	  ng-controller="typeTemplateController"
-	  ng-init="findBrandList();findSpecificationList()">
+	  ng-init="findBrandList();findSpecList();">
   	<!-- .box-body -->
     <div class="box-header with-border">
         <h3 class="box-title">商品类型模板管理</h3>
@@ -48,11 +51,11 @@
 					<div class="btn-group">
 						<button type="button" class="btn btn-default" title="新建"
 							data-toggle="modal" data-target="#editModal"
-								ng-click="entity.customAttributeItems=[]">
+								ng-click="entity={customAttributeItems:[]}">
 							<i class="fa fa-file-o"></i> 新建
 						</button>
 						<button type="button" class="btn btn-default" title="删除"
-								ng-click="delete()">
+								ng-click="delete();">
 							<i class="fa fa-trash-o"></i> 删除
 						</button>
 
@@ -66,10 +69,8 @@
 			
 			<div class="box-tools pull-right">
 				<div class="has-feedback">
-					<input ng-model="searchEntity.name"
-						   placeholder="分类模板名类"/>
-					<button class="btn btn-default"
-							ng-click="reload()">查询</button>
+					分类模板名称：<input ng-model="searchEntity.name"/>
+					<button class="btn btn-default" ng-click="reload();">查询</button>
 				</div>
 			</div><br/>
 			<!--工具栏/-->
@@ -92,17 +93,19 @@
 				<tbody>
 					<tr ng-repeat="entity in dataList">
 						<td><input type="checkbox"
-								   ng-click="updateSelection($event,entity.id)"></td>
+								   ng-click="updateSelection($event,entity.id);"></td>
 						<td>{{entity.id}}</td>
 						<td>{{entity.name}}</td>
-						<td>{{entity.brandIds}}</td>
-						<td>{{entity.specIds}}</td>
-						<td>{{entity.customAttributeItems}}</td>
+						<td>{{jsonArr2Str(entity.brandIds, 'text')}}</td>
+						<td>{{jsonArr2Str(entity.specIds, 'text')}}</td>
+						<td>{{jsonArr2Str(entity.customAttributeItems, 'text')}}</td>
 						<td class="text-center">
 							<button type="button" class="btn bg-olive btn-xs"
-								data-toggle="modal" ng-click="show(entity);" data-target="#editModal">修改</button>
+									ng-click="show(entity);"
+								data-toggle="modal" data-target="#editModal">修改</button>
 						</td>
 					</tr>
+
 				</tbody>
 			</table>
 			<!--数据列表/-->
@@ -113,7 +116,8 @@
 	<!-- /.box-body -->
 
 	<!-- 编辑窗口 -->
-	<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="editModal" tabindex="-1" role="dialog"
+		 aria-labelledby="myModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" >
 		<div class="modal-content">
 			<div class="modal-header">
@@ -125,22 +129,34 @@
 				<table class="table table-bordered table-striped"  width="800px">
 			      	<tr>
 			      		<td>模版名称</td>
-			      		<td><input  class="form-control" ng-model="entity.name" placeholder="模版名称">  </td>
+			      		<td><input  class="form-control"
+									ng-model="entity.name" placeholder="模版名称">  </td>
 			      	</tr>			   
 			      	<tr>
 			      		<td>关联品牌</td>
 			      		<td>
-							<input select2 select2-model="entity.brandIds"
-								   config="brandList" multiple placeholder="选择品牌（可多选）"
-								   class="form-control" type="text"/>
-						</td>
+							<!--
+								config: 数据 {data:[{id:1,text:''}]}
+							 -->
+							<input select2
+								   select2-model="entity.brandIds"
+								   config="brandList"
+								   multiple
+								   type="text"
+								   class="form-control"
+								   placeholder="选择品牌(可多选)" />
+			      		</td>
 			      	</tr>
 			      	<tr>
 			      		<td>关联规格</td>
 			      		<td>
-							<input select2 select2-model="entity.specIds"
-							config="specificontion" multiple placeholder="选择规格 (可多选)"
-							class="form-control" type="text">
+							<input select2
+								   select2-model="entity.specIds"
+								   config="specList"
+								   multiple
+								   type="text"
+								   class="form-control"
+								   placeholder="选择规格(可多选)" />
 			      		</td>
 			      	</tr>	
 			      	
@@ -148,7 +164,9 @@
 			      		<td>扩展属性</td>
 			      		<td>
 			      			<div class="btn-group">
-	                             <button type="button" class="btn btn-default" ng-click="addButton()" title="新增扩展属性"><i class="fa fa-file-o"></i> 新增扩展属性</button>
+	                             <button type="button" class="btn btn-default" title="新增扩展属性"
+										 ng-click="addTableRow()">
+									 <i class="fa fa-file-o"></i> 新增扩展属性</button>
 	                                                                    
 	                        </div>
 							<table class="table table-bordered table-striped"  width="800px">
@@ -160,8 +178,11 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat="c in entity.customAttributeItems">
-										<td><input class="form-control" ng-model="c.text" placeholder="属性名称" ></td>
-										<td><button type="button" class="btn btn-default" ng-click="delButton($index)" title="删除"><i class="fa fa-trash-o"></i> 删除</button></td>
+										<td><input class="form-control"
+												   ng-model="c.text" placeholder="属性名称" ></td>
+										<td><button type="button" class="btn btn-default" title="删除"
+													ng-click="deleteTableRow($index)">
+											<i class="fa fa-trash-o"></i> 删除</button></td>
 									</tr>
 								</tbody>
 							</table>	
@@ -173,8 +194,11 @@
 				
 			</div>
 			<div class="modal-footer">						
-				<button class="btn btn-success" data-dismiss="modal" ng-click="saveOrUpdate()" aria-hidden="true">保存</button>
-				<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+				<button class="btn btn-success" data-dismiss="modal"
+						ng-click="saveOrUpdate();"
+						aria-hidden="true">保存</button>
+				<button class="btn btn-default" data-dismiss="modal"
+						aria-hidden="true">关闭</button>
 			</div>
 		  </div>
 		</div>

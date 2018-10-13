@@ -4,19 +4,47 @@ app.controller('itemCatController', function($scope, $controller, baseService){
     /** 指定继承baseController */
     $controller('baseController',{$scope:$scope});
 
-    /** 查询条件对象 */
-    $scope.searchEntity = {};
-    /** 分页查询(查询条件) */
-    $scope.search = function(page, rows){
-        baseService.findByPage("/itemCat/findByPage", page,
-			rows, $scope.searchEntity)
-            .then(function(response){
-                /** 获取分页查询结果 */
-                $scope.dataList = response.data.rows;
-                /** 更新分页总记录数 */
-                $scope.paginationConf.totalItems = response.data.total;
-            });
+
+
+    // 根据父级id查询商品分类
+    $scope.findItemCatByParentId = function (parentId) {
+        baseService.sendGet("/itemCat/findItemCatByParentId?parentId="
+            + parentId).then(function (response) {
+                // 获取响应数据 [{},{}] List<ItemCat>
+                $scope.dataList = response.data;
+
+        });
     };
+
+    // 定义变量记录级别
+    $scope.grade = 0;
+    // 查询下级
+    $scope.selectList = function (entity, grade) {
+        // 赋值
+        $scope.grade = grade;
+        if ($scope.grade == 0){
+            $scope.itemCat_1 = null;
+            $scope.itemCat_2 = null;
+        }
+        // 判断级别
+        if ($scope.grade == 1) {
+            $scope.itemCat_1 = entity;
+            $scope.itemCat_2 = null;
+        }
+        if ($scope.grade == 2) {
+            $scope.itemCat_2 = entity;
+        }
+
+        $scope.findItemCatByParentId(entity.id);
+    };
+
+
+
+
+
+
+
+
 
     /** 添加或修改 */
     $scope.saveOrUpdate = function(){

@@ -1,2 +1,2 @@
-/** 定义模块 */
-var app = angular.module('pinyougou', []);
+// 定义基础模块层(不带分页)
+var app = angular.module('pinyougou',[]);

@@ -12,6 +12,7 @@
     <name>${project.artifactId}</name>
     <modules>
         <module>pyg-sellergoods-service</module>
+        <module>pyg-content-service</module>
     </modules>
     <packaging>pom</packaging>
 

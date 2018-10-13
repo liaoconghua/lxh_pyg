@@ -41,6 +41,7 @@ app.controller("baseController", function($scope){
         }
     };
 
+
     /** 提取数组中json某个属性，返回拼接的字符串(逗号分隔) */
     $scope.jsonArr2Str = function(jsonArrStr, key){
 

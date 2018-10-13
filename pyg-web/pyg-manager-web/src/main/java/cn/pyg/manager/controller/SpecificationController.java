@@ -49,7 +49,7 @@ public class SpecificationController {
     }
 
     /** 查询所有的规格 */
-    @GetMapping("/findSpecificationList")
+    @GetMapping("/findSpecList")
     public List<Map<String,Object>> findSpecificationList(){
         try {
             return specificationService.findAllByIdAndName();

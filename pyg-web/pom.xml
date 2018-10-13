@@ -12,8 +12,7 @@
     <name>${project.artifactId}</name>
     <modules>
         <module>pyg-manager-web</module>
-        <module>pyg-show-web</module>
-        <module>pyg-show-web</module>
+       <module>pyg-shop-web</module>
     </modules>
     <packaging>pom</packaging>
 

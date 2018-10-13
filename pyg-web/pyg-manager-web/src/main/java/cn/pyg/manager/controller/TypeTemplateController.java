@@ -1,11 +1,14 @@
 package cn.pyg.manager.controller;
 
 import cn.pyg.common.pojo.PageResult;
+import cn.pyg.pojo.Specification;
 import cn.pyg.pojo.TypeTemplate;
 import cn.pyg.service.TypeTemplateService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 模块的控制器
