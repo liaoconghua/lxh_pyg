@@ -52,4 +52,25 @@ public class GoodsController {
         }
         return goodsService.findByPage(goods, page, rows);
     }
+
+    @GetMapping("/updateMarketable")
+    public boolean updateMarketable(Long[] ids, String status){
+        try{
+            goodsService.updateMarketable(ids,status);
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
+    }
+
+    /** 根据商品id进行删除 */
+    @GetMapping("/delete")
+    public boolean delete(Long[] ids){
+        try{
+            goodsService.updateDeleteStatus(ids);
+            return  true;
+        }catch (Exception ex){
+            return false;
+        }
+    }
 }

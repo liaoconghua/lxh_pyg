@@ -140,14 +140,13 @@ public class GoodsServiceImpl implements GoodsService {
 
     }
 
+    /** 删除指定商品 */
     @Override
     public void delete(Serializable id) {
-
     }
 
     @Override
     public void deleteAll(Serializable[] ids) {
-
     }
 
     @Override
@@ -209,5 +208,18 @@ public class GoodsServiceImpl implements GoodsService {
         }catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    /** 批量修改上下架状态 */
+    @Override
+    public void updateMarketable(Long[] ids, String status) {
+        goodsMapper.updateStatus(ids, status, "is_marketable");
+
+    }
+
+    /** 批量删除商品 */
+    @Override
+    public void updateDeleteStatus(Long[] ids) {
+        goodsMapper.updateStatus(ids, "1", "is_delete");
     }
 }

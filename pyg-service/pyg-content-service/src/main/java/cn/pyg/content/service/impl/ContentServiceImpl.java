@@ -1,6 +1,7 @@
 package cn.pyg.content.service.impl;
 
 import cn.pyg.common.pojo.PageResult;
+import cn.pyg.mapper.ContentCategoryMapper;
 import cn.pyg.mapper.ContentMapper;
 import cn.pyg.pojo.Content;
 import cn.pyg.service.ContentService;

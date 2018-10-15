@@ -8,7 +8,7 @@
 	<select id="findAll" resultType="map">
 		SELECT id,goods_name AS goodsName,price,
 			audit_status AS auditStatus,category1_id AS category1Id,
-			category2_id AS category2Id,category3_id AS category3Id
+			category2_id AS category2Id,category3_id AS category3Id,is_marketable AS isMarketable
 		FROM tb_goods where is_delete is NULL
 			<!-- 商家ID -->
 			<if test="sellerId != null and sellerId != ''">

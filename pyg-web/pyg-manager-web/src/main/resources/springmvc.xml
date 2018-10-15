@@ -39,4 +39,15 @@
     <dubbo:registry protocol="zookeeper" address="192.168.12.131:2181"/>
     <!-- 配置采用包扫描来引用服务，产生服务接口的代理对象 -->
     <dubbo:annotation package="cn.pyg.manager.controller"/>
+
+    <!--加载属性文件-->
+    <context:property-placeholder location="classpath:application.properties"/>
+    <!--配置文件上传解析器-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--设置文件上传的默认编码-->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!--设置文件上传的大小 1MB: 1024-->
+        <property name="maxUploadSize" value="4194304"/>
+    </bean>
 </beans>

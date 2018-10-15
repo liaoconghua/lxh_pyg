@@ -59,4 +59,6 @@ app.controller("baseController", function($scope){
         // 返回数组中的元素用逗号分隔的字符串
         return resArr.join(",");
     };
+
+    /** 删除广告类型 */
 });
