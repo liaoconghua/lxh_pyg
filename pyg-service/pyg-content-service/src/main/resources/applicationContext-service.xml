@@ -12,9 +12,11 @@
 
     <!-- 配置加载属性文件 -->
     <context:property-placeholder
-            location="classpath:props/*.properties"/>
+            location="classpath*:props/*.properties"/>
     <!-- 导入数据访问配置文件 -->
     <import resource="classpath:applicationContext-mapper.xml"/>
+    <!--导入redis的配置文件-->
+    <import resource="classpath:applicationContext-redis.xml"/>
 
     <!-- ############## 配置dubbo服务提供者 ############## -->
     <!-- 配置当前应用的名称 -->

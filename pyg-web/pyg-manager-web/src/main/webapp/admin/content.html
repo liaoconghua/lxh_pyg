@@ -113,7 +113,6 @@
 					</div>
 					<div class="modal-body">
 						<table class="table table-bordered table-striped" width="800px">
-                            {{entity}}
 							<tr>
 								<td>广告分类</td>
 								<td>
@@ -158,12 +157,10 @@
 								<td><input type="checkbox"
                                            class="icheckbox_square-blue"
 										   ng-checked="entity.status == 1"
-                                           ng-click="isStatus($event)"
-										   />
+                                           ng-click="isStatus($event)"/>
 								</td>
 							</tr>
 						</table>
-						{{entity.status}}
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-success" data-dismiss="modal"

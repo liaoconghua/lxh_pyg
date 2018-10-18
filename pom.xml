@@ -15,6 +15,7 @@
     <module>pyg-interface</module>
     <module>pyg-service</module>
     <module>pyg-web</module>
+      <module>pyg-solr-util</module>
   </modules>
 
   <name>${project.artifactId}</name>

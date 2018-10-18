@@ -13,6 +13,7 @@
     <modules>
         <module>pyg-sellergoods-service</module>
         <module>pyg-content-service</module>
+        <module>pyg-search-service</module>
     </modules>
     <packaging>pom</packaging>
 

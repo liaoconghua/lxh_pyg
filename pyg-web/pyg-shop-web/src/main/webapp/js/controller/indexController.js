@@ -7,5 +7,5 @@ app.controller("indexController", function ($scope, baseService) {
             // 获取响应的名字
             $scope.loginName = response.data.loginName;
         })
-    }
+    };
 });
