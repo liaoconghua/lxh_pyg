@@ -5,10 +5,16 @@ import cn.pyg.pojo.Goods;
 import cn.pyg.service.GoodsService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Security;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 /**
  * 新增商品控制器
@@ -17,8 +23,18 @@ import java.security.Security;
 @RequestMapping("/goods")
 public class GoodsController {
 
-    @Reference(timeout = 100000)
+    @Reference(timeout = 10000000)
     private GoodsService goodsService;
+    @Autowired
+    private JmsTemplate jmsTemplate;
+    @Autowired
+    private Destination solrQueue;
+    @Autowired
+    private Destination solrDeleteQueue;
+    @Autowired
+    private Destination pageTopic;
+    @Autowired
+    private Destination deleteTopic;
 
     @PostMapping("/save")
     public boolean save(@RequestBody Goods goods) {
@@ -53,14 +69,55 @@ public class GoodsController {
         return goodsService.findByPage(goods, page, rows);
     }
 
+    /** 商品上下架 */
     @GetMapping("/updateMarketable")
     public boolean updateMarketable(Long[] ids, String status){
         try{
+
             goodsService.updateMarketable(ids,status);
+            // 判断商品上下架状态
+            if ("1".equals(status)){  // 表示上架
+                /** 发送消息,生成商品索引 */
+                jmsTemplate.send(solrQueue,new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        return session.createObjectMessage(ids);
+                    }
+                });
+
+                /** 发送消息,生成静态网页 */
+                for (Long goodsId : ids) {
+                    jmsTemplate.send(pageTopic, new MessageCreator() {
+                        @Override
+                        public Message createMessage(Session session) throws JMSException {
+                            return session.createTextMessage(goodsId.toString());
+                        }
+                    });
+
+                }
+            }else {  // 表示下架
+                // 发送消息,生成商品索引
+                jmsTemplate.send(solrDeleteQueue,new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        return session.createObjectMessage(ids);
+                    }
+                });
+
+                /** 发送消息,删除静态网页 */
+                jmsTemplate.send(deleteTopic, new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        return session.createObjectMessage(ids);
+                    }
+                });
+
+            }
             return true;
         }catch (Exception ex){
-            return false;
+          ex.printStackTrace();
         }
+        return false;
     }
 
     /** 根据商品id进行删除 */
@@ -73,4 +130,5 @@ public class GoodsController {
             return false;
         }
     }
+
 }

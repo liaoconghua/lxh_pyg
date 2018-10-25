@@ -23,8 +23,9 @@ app.controller("baseController", function($scope){
     // 定义数组封装用户选择的id
     $scope.ids = [];
 
+    //-====================================全选反选===========================================
     // 为checkbox绑定点击事件
-    $scope.updateSelection = function($event,id){
+    $scope.updateSelection = function($event,id,i){
         // $event: 事件对象
         // $event.target: dom元素
         // $event.target.checked : 判断checkbox是否选中
@@ -39,6 +40,32 @@ app.controller("baseController", function($scope){
             // 第二个参数：删除的个数
             $scope.ids.splice(idx,1);
         }
+
+        // 重新赋值,再次绑定checkbox
+        $scope.checkedArr[i] = $event.target.checked;
+        // 让全选是否选中,再次绑定checkbox
+        $scope.ckAll = $scope.dataList.length == $scope.ids.length;
+    };
+
+    // 定义checkbox是否选中的数组
+    $scope.checkedArr = [];
+    // 为全选绑定点击事件
+    $scope.checkAll = function ($event) {
+        // 清空用户选择的ids
+        $scope.ids = [];
+        // 循环当前页的数据数组
+        for (var i = 0; i < $scope.dataList.length; i++){
+            // 初始化数组
+            $scope.checkedArr[i] = $event.target.checked;
+            // 判读是否选中
+            if ($event.target.checked){
+                // {id}
+                $scope.ids.push($scope.dataList[i].id);
+            }
+        }
+        // 重新赋值, 再次绑定checkbox
+        $scope.ckAll = $scope.dataList.length == $scope.ids.length;
+
     };
 
 

@@ -1,6 +1,6 @@
 package cn.pyg.sellergoods.service.impl;
 
-import java.util.Date;
+import java.util.*;
 
 import cn.pyg.common.pojo.PageResult;
 import cn.pyg.mapper.*;
@@ -11,13 +11,11 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 新增商品服务层
@@ -38,7 +36,6 @@ public class GoodsServiceImpl implements GoodsService {
     private SellerMapper sellerMapper;
     @Autowired
     private ItemMapper itemMapper;
-
 
     /**
      * 添加商品
@@ -221,5 +218,64 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public void updateDeleteStatus(Long[] ids) {
         goodsMapper.updateStatus(ids, "1", "is_delete");
+    }
+
+    /** 根据商品id获取数据 */
+    @Override
+    public Map<String, Object> getGoods(Long goodsId) {
+        try{
+
+            // 定义数据模型
+            Map<String,Object> dataModel = new HashMap<>();
+            // 加载商品SPU数据
+            Goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+            dataModel.put("goods", goods);
+            // 加载商品描述数据
+            GoodsDesc goodsDesc = goodsDescMapper.selectByPrimaryKey(goodsId);
+            dataModel.put("goodsDesc", goodsDesc);
+
+            // 判断三级分类不为空, name一级二级都有了
+            if (goods.getCategory3Id() != null){
+                dataModel.put("itemCast1", itemCatMapper.selectByPrimaryKey(goods.getCategory1Id()).getName() );
+                dataModel.put("itemCast2", itemCatMapper.selectByPrimaryKey(goods.getCategory2Id()).getName() );
+                dataModel.put("itemCast3", itemCatMapper.selectByPrimaryKey(goods.getCategory3Id()).getName() );
+            }
+
+            /** 查询SKU数据 */
+            Example example = new Example(Item.class);
+            // 查询条件对象
+            Example.Criteria criteria = example.createCriteria();
+            // 状态码为 1
+            criteria.andEqualTo("status","1");
+            // 条件: SPU ID
+            criteria.andEqualTo("goodsId",goodsId);
+            // 按是否默认降序
+            example.orderBy("isDefault").desc();
+            // 根据条件查询SKU的商品数据
+            List<Item> itemList = itemMapper.selectByExample(example);
+            dataModel.put("itemList", JSON.toJSONString(itemList));
+
+            return dataModel;
+        }catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /** 查询上架的SKU商品数据 */
+    @Override
+    public List<Item> findItemByGoodId(Long[] ids) {
+        try {
+            // 创建示范对象
+            Example example = new Example(Item.class);
+            // 创建查询条件对象
+            Example.Criteria criteria = example.createCriteria();
+            // 添加in查询条件
+            criteria.andIn("goodsId", Arrays.asList(ids));
+            // 查询数据
+            return itemMapper.selectByExample(example);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

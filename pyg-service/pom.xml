@@ -14,6 +14,8 @@
         <module>pyg-sellergoods-service</module>
         <module>pyg-content-service</module>
         <module>pyg-search-service</module>
+        <module>pyg-sms-service</module>
+        <module>pyg-user-service</module>
     </modules>
     <packaging>pom</packaging>
 

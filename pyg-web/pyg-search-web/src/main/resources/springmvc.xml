@@ -34,6 +34,6 @@
     <dubbo:application name="pyg-search-web"/>
     <!-- 配置zookeeper作为注册中心，注册服务地址 -->
     <dubbo:registry protocol="zookeeper" address="192.168.12.131:2181"/>
-    <dubbo:annotation package="cn.pyg.search.controller"/>
+    <dubbo:annotation package="cn.pyg.search"/>
 
 </beans>
