@@ -1,11 +1,12 @@
 package cn.pyg.user.service.impl;
 
+import cn.pyg.common.util.HttpClientUtils;
 import cn.pyg.mapper.UserMapper;
 import cn.pyg.pojo.User;
 import cn.pyg.service.UserService;
-import cn.pyg.user.service.impl.HttpClientUtils;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,6 +75,8 @@ public class UserServiceImpl implements UserService {
 
         user.setCreated(new Date());
         user.setUpdated(user.getCreated());
+
+        user.setPassword(DigestUtils.md5Hex(user.getPassword()));
 
         userMapper.insertSelective(user);
 

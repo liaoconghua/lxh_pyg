@@ -1,4 +1,4 @@
-package cn.pyg.user.service.impl;
+package cn.pyg.common.util;
 
 import java.io.IOException;
 import java.util.ArrayList;

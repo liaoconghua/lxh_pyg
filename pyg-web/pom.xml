@@ -17,6 +17,7 @@
       <module>pyg-item-web</module>
       <module>pyg-sms-web</module>
       <module>pyg-user-web</module>
+      <module>pyg-cart-web</module>
   </modules>  
   <packaging>pom</packaging>
   <properties> 

@@ -16,6 +16,7 @@
         <module>pyg-search-service</module>
         <module>pyg-sms-service</module>
         <module>pyg-user-service</module>
+        <module>pyg-cart-service</module>
     </modules>
     <packaging>pom</packaging>
 
