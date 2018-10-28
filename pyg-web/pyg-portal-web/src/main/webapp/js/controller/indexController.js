@@ -1,5 +1,7 @@
 /** 定义首页控制器层 */
-app.controller("indexController", function ($scope, baseService) {
+app.controller("indexController", function ($scope, $controller, baseService) {
+    /** 指定继承baseController */
+    $controller('baseController',{$scope:$scope});
 
     $scope.findContentByCategoryId = function (categoryId) {
         baseService.sendGet("/content/findContentByCategoryId?categoryId=" + categoryId)
@@ -15,6 +17,8 @@ app.controller("indexController", function ($scope, baseService) {
     $scope.search = function () {
         var keyword = $scope.keywords ? $scope.keywords : '';
         location.href = "http://search.pinyougou.com?keywords=" + keyword;
-    }
+    };
+
+
 
 });

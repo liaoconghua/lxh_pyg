@@ -1,5 +1,8 @@
 /** 定义搜索控制器 */
-app.controller("searchController", function ($scope, $sce, baseService) {
+app.controller("searchController", function ($scope, $sce, baseService, $controller) {
+
+    /** 指定继承baseController */
+    $controller("baseController", {$scope:$scope});
 
     $scope.searchParam = {
         keywords: '', category: '', brand: '',

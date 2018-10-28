@@ -12,5 +12,12 @@
   <properties> 
     <!--覆盖父工程中的prot属性-->  
     <port>9104</port> 
-  </properties> 
+  </properties>
+  <dependencies>
+    <!-- cas-client-core 配置集成CAS -->
+    <dependency>
+      <groupId>org.jasig.cas.client</groupId>
+      <artifactId>cas-client-core</artifactId>
+    </dependency>
+  </dependencies>
 </project>

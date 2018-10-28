@@ -14,4 +14,12 @@
     <!-- tomcat端口号 -->
     <port>9109</port>
   </properties>
+
+  <dependencies>
+    <!-- cas-client-core 配置集成CAS -->
+    <dependency>
+      <groupId>org.jasig.cas.client</groupId>
+      <artifactId>cas-client-core</artifactId>
+    </dependency>
+  </dependencies>
 </project>

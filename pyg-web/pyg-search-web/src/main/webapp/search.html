@@ -12,10 +12,11 @@
 		<script src="/plugins/angularjs/angular.min.js"></script>
 		<script src="/js/base.js"></script>
 		<script src="/js/service/baseService.js"></script>
+		<script src="/js/controller/baseController.js"></script>
 		<script src="/js/controller/searchController.js"></script>
 	</head>
 
-	<body ng-app="pinyougou" ng-controller="searchController" ng-init="search()">
+	<body ng-app="pinyougou" ng-controller="searchController" ng-init="search();loadUsername()">
 		<!-- 头部栏位 -->
 		<!--页面顶部-->
 		<div id="nav-bottom">
@@ -25,10 +26,13 @@
 					<div class="py-container">
 						<div class="shortcut">
 							<ul class="fl">
-								<li class="f-item">品优购欢迎您！</li>
-								<li class="f-item">请
-									<a href="login.html">登录</a>　<span>
-									<a href="http://user.pinyougou.com/register.html">免费注册</a></span></li>
+								<li class="f-item" ng-if="loginName">{{loginName}}, 品优购欢迎您！
+									<a href="http://sso.pinyougou.com/logout?service={{redirectUrl}}">退出</a>
+								</li>
+								<li class="f-item" ng-if="!loginName">请
+									<a href="http://sso.pinyougou.com/?service={{redirectUrl}}">登录</a>
+									<a href="http://user.pinyougou.com/register.html">免费注册</a>
+								</li>
 							</ul>
 							<ul class="fr">
 								<li class="f-item">我的订单</li>
